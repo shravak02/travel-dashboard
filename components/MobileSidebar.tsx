@@ -9,6 +9,7 @@ const MobileSidebar = () => {
     const sidebarRef = useRef<SidebarComponent>(null);
   return (
     <div className="mobile-sidebar wrapper">
+        <div className="mt-10"></div>
         <header>
             <Link to='/'>
                 <img 
@@ -19,7 +20,7 @@ const MobileSidebar = () => {
                 <h1>Tourvisto</h1>
             </Link>
 
-            <button onClick={() => sidebarRef.current?.toggle()}>
+            <button onClick={() => sidebarRef.current?.toggle(console.log("toggel"))} className="cursor-pointer">
                 <img src="/assets/icons/menu.svg"
                      alt="menu"
                      className="size-7" />
@@ -27,7 +28,7 @@ const MobileSidebar = () => {
         </header>
         <SidebarComponent 
             width={270}
-            ref={(Sidebar)=>Sidebar = sidebar}
+            ref={sidebarRef}//(Sidebar)=>Sidebar = sidebar}
             created={()=> {if (sidebarRef.current) {
       sidebarRef.current.hide();
     }}}

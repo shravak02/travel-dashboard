@@ -1,36 +1,9 @@
-/* 
-import * as React from 'react';
-import '@syncfusion/ej2-base/styles/material.css';
-import '@syncfusion/ej2-react-grids/styles/material.css';
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
-import { ColumnDirective, ColumnsDirective, GridComponent } from '@syncfusion/ej2-react-grids';
-
-export default function AllUsers() {
-
-  const data = [
-    { OrderID: 10248, CustomerID: 'VINET', ShipCountry: 'France' },
-    { OrderID: 10249, CustomerID: 'TOMSP', ShipCountry: 'Germany' },
-    { OrderID: 10250, CustomerID: 'HANAR', ShipCountry: 'Brazil' }
-  ];
-
-  function gridTemplate(props) {
-     console.log('Props:', props);
-    return "render !// (<div className='bg-red-600'>
-       //<ButtonComponent>{props}</ButtonComponent> 
-   // </div>) ;
-  }
-
-  return (<GridComponent dataSource={data}>
-    <ColumnsDirective>
-      <ColumnDirective field='OrderID' width='100'/>
-      <ColumnDirective field='CustomerID' width='100'/>
-      <ColumnDirective headerText='fff' width='100' template={gridTemplate()}/>
-    </ColumnsDirective>
-  </GridComponent>);
-};
- */
-  import { Header } from "../../../components";
-import { ColumnsDirective, ColumnDirective, GridComponent } from "@syncfusion/ej2-react-grids";
+ import { Header } from "../../../components";
+import { ColumnsDirective, ColumnDirective, GridComponent,Inject,
+    Sort,
+    Filter,
+    Page,
+    Toolbar, } from "@syncfusion/ej2-react-grids";
 import { cn, formatDate } from "~/lib/utils";
 import { getAllUsers } from "~/appwrite/auth";
 import type { Route } from "./+types/all-users"
@@ -60,7 +33,11 @@ const AllUsers = ({ loaderData }: Route.ComponentProps) => {
                 description="Filter, sort, and access detailed user profiles"
             />
 
-            <GridComponent dataSource={users} gridLines="None">
+            <GridComponent dataSource={users} gridLines="None"
+                           allowSorting={true} // ✅ Enables sorting
+                           allowFiltering={true} // ✅ Enables filtering
+                           allowPaging={true} // Optional: Enables pagination
+                           pageSettings={{ pageSize: 10 }}>
                 <ColumnsDirective>
                     <ColumnDirective headerText='Employee Image' width='180' template={gridTemplate} textAlign='Center'/>
                     <ColumnDirective 
@@ -106,6 +83,7 @@ const AllUsers = ({ loaderData }: Route.ComponentProps) => {
                         )}  */
                     />
                 </ColumnsDirective>
+                <Inject services={[Sort, Filter, Page, Toolbar]} />
             </GridComponent>
         </main>
     )

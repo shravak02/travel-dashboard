@@ -39,7 +39,7 @@ const Trips = ({ loaderData }: Route.ComponentProps) => {
     }
 
     return (
-        <main className="all-users wrapper">
+        <main className="all-users wrapper mt-10">
             <Header
                 title="Trips"
                 description="View and edit AI-generated travel plans"

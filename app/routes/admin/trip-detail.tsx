@@ -50,7 +50,7 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
     ]
 
     return (
-        <main className="travel-detail wrapper">
+        <main className="travel-detail wrapper ">
             <Header title="Trip Details" description="View and edit AI-generated travel plans" />
 
             <section className="container wrapper-md">
