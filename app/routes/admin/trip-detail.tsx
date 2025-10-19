@@ -12,21 +12,23 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     const [trip, trips] = await Promise.all([
         getTripById(tripId),
         getAllTrips(4, 0)
+      
     ]);
-
+    
     return {
         trip,
-        allTrips: trips.allTrips.map(({ $id, tripDetails, imageUrls }) => ({
+        allTrips: trips.allTrips.map(({ $id, tripDetail, imageUrl }) => ({
+            
+            ...parseTripData(tripDetail),
+            imageUrls: imageUrl ?? [],
             id: $id,
-            ...parseTripData(tripDetails),
-            imageUrls: imageUrls ?? []
         }))
     }
 }
 
 const TripDetail = ({ loaderData }: Route.ComponentProps) => {
-    const imageUrls = loaderData?.trip?.imageUrls || [];
-    const tripData = parseTripData(loaderData?.trip?.tripDetails);
+    const imageUrls = loaderData?.trip?.imageUrl || [];
+    const tripData = parseTripData(loaderData?.trip?.tripDetail);
 
     const {
         name, duration, itinerary, travelStyle,

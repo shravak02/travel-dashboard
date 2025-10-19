@@ -78,7 +78,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps ) => {
                    budget: formData.budget,
                    groupType: formData.groupType,
                    userId: user.$id
-               })
+               }) 
            })
 
            const result: CreateTripResponse = await response.json();

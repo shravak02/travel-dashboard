@@ -15,10 +15,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const { allTrips, total } = await getAllTrips(limit, offset);
 
     return {
-        trips: allTrips.map(({ $id, tripDetails, imageUrls }) => ({
+        trips: allTrips.map(({ $id, tripDetail, imageUrl }) => ({
+            
+            ...parseTripData(tripDetail),
+            imageUrls: imageUrl ?? [],
             id: $id,
-            ...parseTripData(tripDetails),
-            imageUrls: imageUrls ?? []
         })),
         total
     }
@@ -26,7 +27,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 const Trips = ({ loaderData }: Route.ComponentProps) => {
     const trips = loaderData.trips as Trip[] | [];
-
+    console.log("trips data :",trips);
     const [searchParams] = useSearchParams();
     const initialPage = Number(searchParams.get('page') || '1')
 

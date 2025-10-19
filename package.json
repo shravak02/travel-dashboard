@@ -24,6 +24,7 @@
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.18",
+    "git-filter-repo": "^0.0.30",
     "isbot": "^5.1.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

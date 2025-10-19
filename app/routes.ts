@@ -15,4 +15,4 @@ export default [
         route('/travel/:tripId', 'routes/root/travel-detail.tsx'),
         route('/travel/:tripId/success', 'routes/root/payment-success.tsx'),
     ])
-] satisfies RouteConfig;
+] satisfies RouteConfig; 

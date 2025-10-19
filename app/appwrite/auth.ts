@@ -108,7 +108,7 @@ export const getAllUsers = async (limit: number, offset: number) => {
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             [Query.limit(limit), Query.offset(offset)]
-        )
+        ) 
 
         if(total === 0) return { users: [], total };
 

@@ -1,8 +1,8 @@
-import {Header, StatsCard, TripCard} from "../../../components";
-import {getAllUsers, getUser} from "~/appwrite/auth";
-import {getTripsByTravelStyle, getUserGrowthPerDay, getUsersAndTripsStats} from "~/appwrite/dashboard";
-import {getAllTrips} from "~/appwrite/trips";
-import {parseTripData} from "~/lib/utils";
+import { Header, StatsCard, TripCard } from "../../../components";
+import { getAllUsers, getUser } from "~/appwrite/auth";
+import { getTripsByTravelStyle, getUserGrowthPerDay, getUsersAndTripsStats } from "~/appwrite/dashboard";
+import { getAllTrips } from "~/appwrite/trips";
+import { parseTripData } from "~/lib/utils";
 import {
     Category,
     ChartComponent,
@@ -11,10 +11,11 @@ import {
     SplineAreaSeries,
     Tooltip
 } from "@syncfusion/ej2-react-charts";
-import {ColumnDirective, ColumnsDirective, GridComponent, Inject} from "@syncfusion/ej2-react-grids";
-import {tripXAxis, tripyAxis, userXAxis, useryAxis} from "~/constants";
-import {redirect} from "react-router";
+import { ColumnDirective, ColumnsDirective, GridComponent, Inject } from "@syncfusion/ej2-react-grids";
+import { tripXAxis, tripyAxis, userXAxis, useryAxis } from "~/constants";
+import { redirect } from "react-router";
 import type { Route } from "../+types/dashboard";
+import { index } from "@react-router/dev/routes";
 const jsonString = `{
   "id": "trip_001",
   "name": "Explore the Swiss Alps",
@@ -91,13 +92,14 @@ export const clientLoader = async () => {
         await getTripsByTravelStyle(),
         await getAllUsers(4, 0),
     ])
-    console.log(trips.allTrips[0].tripDetail);
-    const allTrips = trips.allTrips.map(({ $id, tripDetail, imageUrls }) => ({  //tripDetail
-        id: $id,
+    console.log("first :",trips.allTrips[2].imageUrl);
+    const allTrips = trips.allTrips.map(({ $id, tripDetail, imageUrl }) => ({  //tripDetail
+        
         ...parseTripData(tripDetail),
-        imageUrls: imageUrls ?? []
+        imageUrls: imageUrl ?? [],
+        id: $id,
     }))
-    console.log(allTrips);
+    
     const mappedUsers: UsersItineraryCount[] = allUsers.users.map((user) => ({
         imageUrl: user.imageUrl,
         name: user.name,
@@ -118,13 +120,13 @@ export const clientLoader = async () => {
 const Dashboard = ({ loaderData }: Route.ComponentProps) => {
     const user = loaderData.user as User | null;
     const { dashboardStats, allTrips, userGrowth, tripsByTravelStyle, allUsers } = loaderData;
-
-     const trips = allTrips.map((trip:any) => ({
-        imageUrl: trip.imageUrls[0],
+console.log("dash :",allTrips);
+    const trips = allTrips.map((trip: any) => ({
+        imageUrl: trip.imageUrl,
         name: trip.name,
         interest: trip.interests,
-    })) 
-
+    }))
+    console.log("trips : ",trips);
     const usersAndTrips = [
         {
             title: 'Latest user signups',
@@ -134,7 +136,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
         },
         {
             title: 'Trips based on interests',
-           // dataSource: trips,
+            // dataSource: trips,
             field: 'interest',
             headerText: 'Interests'
         }
@@ -173,17 +175,20 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                 <h1 className="text-xl font-semibold text-dark-100">Created Trips</h1>
 
                 <div className='trip-grid'>
-                     {allTrips.map((trip) => (
-                        <TripCard
-                            key={trip.id}
-                            id={trip.id.toString()}
-                            name={trip.name!}
-                            imageUrl={trip.imageUrls[0]}
-                            location={trip.itinerary?.[0]?.location ?? ''}
-                            tags={[trip.interests!, trip.travelStyle!]}
-                            price={trip.estimatedPrice!}
-                        />
-                    ))} 
+                    {allTrips.map((trip) => {
+                         
+                        return (
+                            <TripCard
+                                key={trip.id}
+                                id={trip.id.toString()}
+                                name={trip.name!}
+                                imageUrl={trip.imageUrls[0]}
+                                location={trip.itinerary?.[0]?.location ?? ''}
+                                tags={[trip.interests!, trip.travelStyle!]}
+                                price={trip.estimatedPrice!}
+                            />
+                        );
+                    })}
                 </div>
             </section>
 
@@ -193,7 +198,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                     primaryXAxis={userXAxis}
                     primaryYAxis={useryAxis}
                     title="User Growth"
-                    tooltip={{ enable: true}}
+                    tooltip={{ enable: true }}
                 >
                     <Inject services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
 
@@ -205,7 +210,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                             type="Column"
                             name="Column"
                             columnWidth={0.3}
-                            cornerRadius={{topLeft: 10, topRight: 10}}
+                            cornerRadius={{ topLeft: 10, topRight: 10 }}
                         />
 
                         <SeriesDirective
@@ -215,7 +220,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                             type="SplineArea"
                             name="Wave"
                             fill="rgba(71, 132, 238, 0.3)"
-                            border={{ width: 2, color: '#4784EE'}}
+                            border={{ width: 2, color: '#4784EE' }}
                         />
                     </SeriesCollectionDirective>
                 </ChartComponent>
@@ -225,7 +230,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                     primaryXAxis={tripXAxis}
                     primaryYAxis={tripyAxis}
                     title="Trip Trends"
-                    tooltip={{ enable: true}}
+                    tooltip={{ enable: true }}
                 >
                     <Inject services={[ColumnSeries, SplineAreaSeries, Category, DataLabel, Tooltip]} />
 
@@ -237,14 +242,14 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
                             type="Column"
                             name="day"
                             columnWidth={0.3}
-                            cornerRadius={{topLeft: 10, topRight: 10}}
+                            cornerRadius={{ topLeft: 10, topRight: 10 }}
                         />
                     </SeriesCollectionDirective>
                 </ChartComponent>
             </section>
 
             <section className="user-trip wrapper">
-                {usersAndTrips.map(({ title, dataSource, field, headerText}, i) => (
+                {usersAndTrips.map(({ title, dataSource, field, headerText }, i) => (
                     <div key={i} className="flex flex-col gap-5">
                         <h3 className="p-20-semibold text-dark-100">{title}</h3>
 

@@ -15,6 +15,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         groupType,
         userId,
     } = await request.json();
+  console.log("Received form data:", { country, numberOfDays, travelStyle, interests });
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const unsplashApiKey = process.env.UNSPLASH_ACCESS_KEY!;
@@ -71,11 +72,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             .getGenerativeModel({ model: 'gemini-2.0-flash' })
             .generateContent([prompt])
 
+        console.log("Gemini response:", textResult.response.text());
+
         const trip = parseMarkdownToJson(textResult.response.text());
 
         const imageResponse = await fetch(
             `https://api.unsplash.com/search/photos?query=${country} ${interests} ${travelStyle}&client_id=${unsplashApiKey}`
         );
+
+ console.log("Calling Unsplash...");
 
         const imageUrls = (await imageResponse.json()).results.slice(0, 3)
             .map((result: any) => result.urls?.regular || null);
@@ -85,14 +90,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
             appwriteConfig.tripCollectionId,
             ID.unique(),
             {
-                tripDetails: JSON.stringify(trip),
+                tripDetail: JSON.stringify(trip),
                 createdAt: new Date().toISOString(),
-                imageUrls,
+                imageUrl : imageUrls || '',
                 userId,
             }
         )
 
-        const tripDetail = parseTripData(result.tripDetails) as Trip;
+        const tripDetail = parseTripData(result.tripDetail) as Trip;
         const tripPrice = parseInt(tripDetail.estimatedPrice.replace('$', ''), 10)
         const paymentLink = await createProduct(
             tripDetail.name,
