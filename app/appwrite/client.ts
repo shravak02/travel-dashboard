@@ -12,6 +12,8 @@ export const appwriteConfig = {
 const client = new Client()
     .setEndpoint(appwriteConfig.endpointUrl)
     .setProject(appwriteConfig.projectId)
+    .setSession('cookie')
+    //.setMode("cors");
 
 const account = new Account(client);
 const database = new Databases(client);
